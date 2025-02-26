@@ -67,6 +67,8 @@ cd UserManagementAPI
 
 ### **2. Restore Dependencies**
 
+Not necessary if it is a new setup otherwise run the following command to restore dependencies:
+
 ```bash
 dotnet restore
 ```
@@ -137,7 +139,6 @@ Replace:
 Before running the API, apply database migrations:
 
 ```bash
-dotnet ef migrations add InitialCreate
 dotnet ef database update
 ```
 
@@ -145,6 +146,12 @@ If you encounter an error **"`dotnet ef` not found"**, install EF Core CLI using
 
 ```bash
 dotnet tool install --global dotnet-ef
+```
+
+Developers or engineers who would like to add a migrations file can run the following command:
+
+```bash
+dotnet ef migrations add MigrationName
 ```
 
 ### **Database Seeding**
@@ -168,8 +175,8 @@ dotnet run
 
 Once the server is running, you can access the API at:
 
-- **HTTP:** `http://localhost:5000`
-- **HTTPS:** `https://localhost:5001`
+- **HTTP:** `http://localhost:5003`
+- **HTTPS:** `https://localhost:7022`
 
 ### **Swagger API Documentation**
 
