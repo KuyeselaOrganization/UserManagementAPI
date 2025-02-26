@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using UserManagementAPI.Data;
 using UserManagementAPI.Models;
 using UserManagementAPI.Services;
@@ -68,7 +69,51 @@ builder.Services.AddControllers();
 
 // Add Swagger for API Documentation
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc(
+        "v1",
+        new OpenApiInfo
+        {
+            Title = "User Management API",
+            Version = "v1",
+            Description =
+                "A microservice for managing users, roles, permissions, and authentication in .NET 9.",
+        }
+    );
+
+    // 🔹 Add Authentication Header (JWT Bearer)
+    options.AddSecurityDefinition(
+        "Bearer",
+        new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            Scheme = "Bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "Enter your JWT token in the format: Bearer {token}",
+        }
+    );
+
+    // 🔹 Apply Security Requirement Globally
+    options.AddSecurityRequirement(
+        new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer",
+                    },
+                },
+                new List<string>()
+            },
+        }
+    );
+});
 
 var app = builder.Build();
 

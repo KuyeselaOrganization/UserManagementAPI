@@ -7,7 +7,7 @@ using UserManagementAPI.DTOs.Common;
 using UserManagementAPI.Services;
 
 [ApiController]
-[Route("api/auth")]
+[Route("api/v1/auth")]
 public class AuthController : ControllerBase
 {
     private readonly AuthService _authService;

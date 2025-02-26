@@ -7,7 +7,7 @@ using UserManagementAPI.DTOs.SystemConfig;
 using UserManagementAPI.Services;
 
 [ApiController]
-[Route("api/config")]
+[Route("api/v1/config")]
 [Authorize(Roles = "Administrator")]
 public class SystemConfigController : ControllerBase
 {

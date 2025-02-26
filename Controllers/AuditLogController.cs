@@ -8,7 +8,7 @@ using UserManagementAPI.DTOs.Audit;
 using UserManagementAPI.Services;
 
 [ApiController]
-[Route("api/audit-logs")]
+[Route("api/v1/audit-logs")]
 [Authorize(Roles = "Administrator")]
 public class AuditLogController : ControllerBase
 {

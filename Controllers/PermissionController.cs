@@ -8,7 +8,7 @@ using UserManagementAPI.DTOs.Permissions;
 using UserManagementAPI.Services;
 
 [ApiController]
-[Route("api/permissions")]
+[Route("api/v1/permissions")]
 [Authorize(Roles = "Administrator")]
 public class PermissionController : ControllerBase
 {
