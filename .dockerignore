@@ -1,0 +1,10 @@
+bin/
+obj/
+.vscode/
+*.md
+*.suo
+*.ncrunch*
+*.user
+*.vs
+*.idea
+*.log
