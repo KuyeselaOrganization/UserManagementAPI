@@ -12,8 +12,8 @@
   },
   "JwtSettings": {
     "Secret": "YOUR_SECRET_KEY",
-    "Issuer": "UserManagementService",
-    "Audience": "UserManagementClients",
+    "Issuer": "KuyeselaUserManagementService",
+    "Audience": "KuyeselaUserManagementClients",
     "ExpiryMinutes": 60
   }
 }
