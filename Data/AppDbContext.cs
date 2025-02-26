@@ -1,3 +1,5 @@
+namespace UserManagementAPI.Data;
+
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using UserManagementAPI.Models;
