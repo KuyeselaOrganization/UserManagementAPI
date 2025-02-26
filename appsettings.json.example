@@ -5,5 +5,15 @@
       "Microsoft.AspNetCore": "Warning"
     }
   },
-  "AllowedHosts": "*"
+  "AllowedHosts": "*",
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Database=kuyeselaUserDb;Username=admin;Password=yourpassword"
+  },
+  "JwtSettings": {
+    "Secret": "YOUR_SECRET_KEY",
+    "Issuer": "UserManagementService",
+    "Audience": "UserManagementClients",
+    "ExpiryMinutes": 60
+  }
 }
