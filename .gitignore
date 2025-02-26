@@ -36,3 +36,4 @@ out/
 node_modules/
 appsettings.json
 appsettings.Development.json
+Migrations/

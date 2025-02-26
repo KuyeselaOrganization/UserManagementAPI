@@ -1,111 +1,236 @@
 # UserManagement API
 
-A microservice-based UserManagement API for ASP.NET Core Web API developed in C# using .NET 9. This API is part of a larger microservices architecture, and relies on PostgreSQL 17 as its database engine. Currently developed on macOS, but it can be set up on Windows or Linux as well.
+A microservice-based **User Management API** built with **ASP.NET Core 9** in C#. This API is designed for **plug-and-play user authentication and role-based access control (RBAC)**, supporting **PostgreSQL 17** as the database engine.
 
-## Table of Contents
+This project is currently developed on **macOS**, but it can be set up on **Windows** and **Linux** as well.
+
+## **Table of Contents**
 
 - [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
 - [Configuration](#configuration)
+- [Running Database Migrations](#running-database-migrations)
 - [Running the API](#running-the-api)
 - [Development](#development)
+- [Testing](#testing)
 - [Contributing](#contributing)
 - [License](#license)
 
-## Prerequisites
+---
 
-- .NET 9 SDK  
-   Download from the [official .NET website](https://dotnet.microsoft.com/).
-- PostgreSQL 17  
-   On macOS, install via Homebrew:  
-   `brew install postgresql@17`
-- An IDE or Editor of your choice (e.g., Visual Studio Code, Rider)
+## **Prerequisites**
 
-## Getting Started
+Before running this API, ensure you have the following installed:
 
-1. **Clone the Repository**
+1. **.NET 9 SDK**
 
-   ```bash
-   git clone https://github.com/KuyeselaOrganization/UserManagementAPI.git
-   cd UserManagementAPI
-   ```
-
-2. **Restore Dependencies**
-
-   ```bash
-   dotnet restore
-   ```
-
-3. **Setup PostgreSQL Database**
-
-   - Start the PostgreSQL service:
+   - Download and install from the [official .NET website](https://dotnet.microsoft.com/).
+   - Verify installation:
      ```bash
-     brew services start postgresql@17
-     ```
-   - Create a new database (e.g., `usermanagement`):
-     ```bash
-     psql -U your_username -c "CREATE DATABASE usermanagement;"
+     dotnet --version
      ```
 
-4. **Configuration**
-   Items to configure and copy
+2. **PostgreSQL 17**
+
+   - **macOS** (using Homebrew):
+     ```bash
+     brew install postgresql@17
+     ```
+   - **Ubuntu/Debian**:
+     ```bash
+     sudo apt update
+     sudo apt install postgresql postgresql-contrib
+     ```
+   - **Windows**:
+     - Download and install from [PostgreSQL website](https://www.postgresql.org/download/).
+
+3. **Entity Framework Core CLI**  
+   If not already installed, run:
 
    ```bash
-    cp appsettings.json.example appsettings.json
-    cp appsettings.Development.json.example appsettings.Development.json
+   dotnet tool install --global dotnet-ef
    ```
 
-   Copy `appsettings.json.example` to `appsettings.json` if available.
+4. **An IDE or Editor**
+   - Recommended: **Visual Studio Code**, **JetBrains Rider**, or **Visual Studio**.
 
-   Update the connection string and other settings as needed in `appsettings.json`.
+## **Getting Started**
 
-   ```json
-   {
-     "ConnectionStrings": {
-       "DefaultConnection": "Host=localhost;Port=5432;Database=usermanagement;Username=your_username;Password=your_password"
-     },
-     "Logging": {
-       "LogLevel": {
-         "Default": "Information",
-         "Microsoft": "Warning",
-         "Microsoft.Hosting.Lifetime": "Information"
-       }
-     }
-   }
-   ```
+Follow these steps to set up the project:
 
-## Running the API
+### **1. Clone the Repository**
 
-To run the API locally:
+```bash
+git clone https://github.com/KuyeselaOrganization/UserManagementAPI.git
+cd UserManagementAPI
+```
+
+### **2. Restore Dependencies**
+
+```bash
+dotnet restore
+```
+
+### **3. Start PostgreSQL (If not running)**
+
+- **macOS**:
+  ```bash
+  brew services start postgresql@17
+  ```
+- **Ubuntu/Debian**:
+  ```bash
+  sudo systemctl start postgresql
+  ```
+
+### **4. Create a PostgreSQL Database**
+
+Run the following command to create a new database for the API:
+
+```bash
+psql -U your_username -c "CREATE DATABASE kuyeselaUserDb;"
+```
+
+**Replace** `your_username` with your PostgreSQL username.
+
+---
+
+## **Configuration**
+
+### **1. Copy the Example Configurations**
+
+Run the following command to copy the default settings:
+
+```bash
+cp appsettings.json.example appsettings.json
+cp appsettings.Development.json.example appsettings.Development.json
+```
+
+If `appsettings.json.example` does not exist, manually create `appsettings.json`.
+
+### **2. Update Database Connection String**
+
+Open **`appsettings.json`** and update the connection string to match your PostgreSQL credentials:
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Port=5432;Database=usermanagement;Username=your_username;Password=your_password"
+  },
+  "JwtSettings": {
+    "Secret": "YOUR_SECRET_KEY",
+    "Issuer": "UserManagementService",
+    "Audience": "UserManagementClients",
+    "ExpiryMinutes": 60
+  }
+}
+```
+
+Replace:
+
+- **`your_username`** → Your PostgreSQL username.
+- **`your_password`** → Your PostgreSQL password.
+
+---
+
+## **Running Database Migrations**
+
+Before running the API, apply database migrations:
+
+```bash
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+```
+
+If you encounter an error **"`dotnet ef` not found"**, install EF Core CLI using:
+
+```bash
+dotnet tool install --global dotnet-ef
+```
+
+### **Database Seeding**
+
+On startup, the system **automatically creates an "Administrator" role and a default admin user**:
+
+- **Admin Email:** `admin@system.com`
+- **Admin Password:** `Admin@123`
+
+After running migrations, you can log in with these credentials.
+
+---
+
+## **Running the API**
+
+To start the API locally, run:
 
 ```bash
 dotnet run
 ```
 
-The API will be available at `https://localhost:5001` or `http://localhost:5000`.
+Once the server is running, you can access the API at:
 
-## Development
+- **HTTP:** `http://localhost:5000`
+- **HTTPS:** `https://localhost:5001`
 
-- **Hot Reload:**  
-   The .NET 9 SDK supports Hot Reload for faster development.
-- **Database Migrations:**  
-   Use Entity Framework Core migrations to update your database schema:
+### **Swagger API Documentation**
 
-  ```bash
-  dotnet ef migrations add InitialCreate
-  dotnet ef database update
-  ```
+To explore available API endpoints using **Swagger**, navigate to:
 
-- **Testing:**  
-   Write tests using your preferred framework (e.g., xUnit). Run them with:
-  ```bash
-  dotnet test
-  ```
+```
+http://localhost:5000/swagger
+```
 
-## Contributing
+---
 
-Contributions are welcome! Please fork the repository and create a pull request for any changes. Make sure your code follows the project conventions and that all tests pass before submission.
+## **Development**
 
-## License
+### **1. Hot Reload**
 
-Distributed under the MIT License. See `LICENSE` for more information.
+For automatic code updates while running:
+
+```bash
+dotnet watch run
+```
+
+### **2. Resetting the Database**
+
+If you need to start over, reset the database:
+
+```bash
+dotnet ef database drop
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+```
+
+---
+
+## **Testing**
+
+The project includes **unit tests** to validate the API's functionality.
+
+To run tests:
+
+```bash
+dotnet test
+```
+
+---
+
+## **Contributing**
+
+Contributions are welcome! 🚀 If you’d like to improve this project:
+
+1. **Fork the repository**
+2. **Create a feature branch**
+3. **Commit your changes**
+4. **Push to your fork**
+5. **Open a pull request**
+
+Please follow the project's **coding style** and ensure **all tests pass** before submitting changes.
+
+---
+
+## **License**
+
+This project is licensed under the **MIT License**. See `LICENSE` for more details.
+
+---
