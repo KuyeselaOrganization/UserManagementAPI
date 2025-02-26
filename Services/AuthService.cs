@@ -49,6 +49,24 @@ public class AuthService
         };
     }
 
+    // Authenticate User
+    public async Task<ApplicationUser> AuthenticateUser(LoginDto loginDTO)
+    {
+        var user = await _userManager.FindByEmailAsync(loginDTO.Email);
+        if (user == null)
+        {
+            return null;
+        }
+
+        var result = await _userManager.CheckPasswordAsync(user, loginDTO.Password);
+        if (!result)
+        {
+            return null;
+        }
+
+        return user;
+    }
+
     // Generate JWT Token
     public async Task<string> GenerateJwtToken(ApplicationUser user)
     {
