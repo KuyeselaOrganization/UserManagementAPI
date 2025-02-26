@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using UserManagementAPI.Data;
 using UserManagementAPI.Models;
+using UserManagementAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +54,14 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Administrator"));
     //options.AddPolicy("RequireUserRole", policy => policy.RequireRole("User"));
 });
+
+// Add Services
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<RoleService>();
+builder.Services.AddScoped<PermissionService>();
+builder.Services.AddScoped<AuditLogService>();
+builder.Services.AddScoped<SystemConfigService>();
 
 // Add Controllers
 builder.Services.AddControllers();

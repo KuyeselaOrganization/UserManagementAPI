@@ -11,6 +11,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
 
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }
+    public DbSet<UserPermission> UserPermissions { get; set; }
     public DbSet<IdentificationDocument> IdentificationDocuments { get; set; }
     public DbSet<SystemConfig> SystemConfigs { get; set; }
     public DbSet<AuditLog> AuditLogs { get; set; }
