@@ -73,7 +73,7 @@ using (var scope = app.Services.CreateScope())
     // Seed the default admin user
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
-    // await DbSeeder.SeedRolesAndAdminUser(userManager, roleManager);
+    await DbSeeder.SeedRolesAndAdminUser(userManager, roleManager);
 }
 
 app.UseAuthentication();
