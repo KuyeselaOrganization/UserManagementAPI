@@ -67,8 +67,6 @@ cd UserManagementAPI
 
 ### **2. Restore Dependencies**
 
-Not necessary if it is a new setup otherwise run the following command to restore dependencies:
-
 ```bash
 dotnet restore
 ```
