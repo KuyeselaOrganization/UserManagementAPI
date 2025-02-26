@@ -27,6 +27,19 @@ public class PermissionService
         _userManager = userManager;
     }
 
+    // 🔹 Get all permissions
+    public async Task<List<PermissionDto>> GetAllPermissions()
+    {
+        return await _context
+            .Permissions.Select(p => new PermissionDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Code = p.Code,
+            })
+            .ToListAsync();
+    }
+
     // 🔹 Create a new permission
     public async Task<ServiceResponse<string>> CreatePermission(CreatePermissionDto model)
     {
