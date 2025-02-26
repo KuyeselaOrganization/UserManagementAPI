@@ -50,7 +50,7 @@ public class AuthService
     }
 
     // Authenticate User
-    public async Task<ApplicationUser> AuthenticateUser(LoginDto loginDTO)
+    public async Task<ApplicationUser?> AuthenticateUser(LoginDto loginDTO)
     {
         var user = await _userManager.FindByEmailAsync(loginDTO.Email);
         if (user == null)
@@ -68,30 +68,37 @@ public class AuthService
     }
 
     // Generate JWT Token
-    public async Task<string> GenerateJwtToken(ApplicationUser user)
+    public Task<string> GenerateJwtToken(ApplicationUser user)
     {
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id),
-            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Email, user.Email ?? ""),
             new Claim("FullName", user.FullName),
         };
 
-        var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_configuration["JwtSettings:Secret"])
-        );
+        var secret =
+            Environment.GetEnvironmentVariable("JWT_SECRET")
+            ?? _configuration["JwtSettings:Secret"];
+        var expirationInMinutes =
+            Environment.GetEnvironmentVariable("JWT_EXPIRATION_IN_MINUTES")
+            ?? _configuration["JwtSettings:ExpirationInMinutes"]
+            ?? "60";
+        if (string.IsNullOrEmpty(secret))
+        {
+            throw new InvalidOperationException("JWT secret is not configured.");
+        }
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
             _configuration["JwtSettings:Issuer"],
             _configuration["JwtSettings:Issuer"],
             claims,
-            expires: DateTime.Now.AddMinutes(
-                int.Parse(_configuration["JwtSettings:ExpirationInMinutes"])
-            ),
+            expires: DateTime.Now.AddMinutes(int.Parse(expirationInMinutes)),
             signingCredentials: creds
         );
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        return Task.FromResult(new JwtSecurityTokenHandler().WriteToken(token));
     }
 }

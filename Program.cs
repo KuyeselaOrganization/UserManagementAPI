@@ -9,10 +9,15 @@ using UserManagementAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Connection String
+var connectionString =
+    Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
+    ?? builder.Configuration.GetConnectionString("DefaultConnection");
+var secret =
+    Environment.GetEnvironmentVariable("JWT_SECRET") ?? builder.Configuration["JwtSettings:Secret"];
+
 // Add PostgreSQL database Connection
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
+builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
 // Configure Identity with Roles
 builder
@@ -39,7 +44,9 @@ builder
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"])
+                Encoding.UTF8.GetBytes(
+                    secret ?? throw new InvalidOperationException("JWT Secret is not provided.")
+                )
             ),
             ValidateIssuer = true,
             ValidIssuer = builder.Configuration["JwtSettings:Issuer"],

@@ -2,6 +2,7 @@ namespace UserManagementAPI.Controllers;
 
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using UserManagementAPI.DTOs.Auth;
 using UserManagementAPI.Services;
@@ -35,7 +36,31 @@ public class AuthController : ControllerBase
             return Unauthorized(new { Message = "Invalid credentials" });
         }
 
-        var token = _authService.GenerateJwtToken(user);
-        return Ok(new { Token = token });
+        try
+        {
+            var token = await _authService.GenerateJwtToken(user);
+            return Ok(token);
+        }
+        catch (System.ArgumentOutOfRangeException ex)
+        {
+            Console.WriteLine(ex.Message);
+            return StatusCode(
+                500,
+                new
+                {
+                    Message = "An error occured while processing your request. Please contact the admin for help if the problem persists.",
+                }
+            );
+        }
+        catch (System.Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return BadRequest(
+                new
+                {
+                    Message = "An error occured while processing your request. Please try again.",
+                }
+            );
+        }
     }
 }
