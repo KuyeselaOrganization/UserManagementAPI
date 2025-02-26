@@ -183,7 +183,7 @@ Once the server is running, you can access the API at:
 To explore available API endpoints using **Swagger**, navigate to:
 
 ```
-http://localhost:5000/swagger
+http://localhost:5003/swagger
 ```
 
 ---
