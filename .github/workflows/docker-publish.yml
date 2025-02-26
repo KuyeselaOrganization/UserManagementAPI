@@ -3,37 +3,37 @@ name: Docker Build & Publish
 on:
   push:
     branches:
-      - main # Trigger when code is pushed to main
-  workflow_dispatch: # Allow manual trigger
+      - main # Triggers on push to main branch
+  workflow_dispatch: # Enables manual workflow trigger
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    name: Build and Push Docker Image
 
     steps:
-      # 🔹 Step 1: Checkout code
-      - name: Checkout repository
+      # Checkout repository code
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # 🔹 Step 2: Read version from file
-      - name: Read version number
+      # Extract version from version.txt
+      - name: Extract Version
         id: version
         run: echo "VERSION=$(cat version.txt)" >> $GITHUB_ENV
 
-      # 🔹 Step 3: Log in to Docker Hub
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
+      # Authenticate with Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # 🔹 Step 4: Build Docker Image
-      - name: Build Docker image
-        run: |
-          docker build -t kuyesela/user-management-api:${{ env.VERSION }} -t kuyesela/user-management-api:latest .
+      # Build Docker image with version and latest tags
+      - name: Build Docker Image
+        run: docker build -t kuyesela/user-management-api:${{ env.VERSION }} -t kuyesela/user-management-api:latest .
 
-      # 🔹 Step 5: Push Docker Image
-      - name: Push Docker image to Docker Hub
+      # Push Docker image to Docker Hub
+      - name: Push Docker Image
         run: |
           docker push kuyesela/user-management-api:${{ env.VERSION }}
           docker push kuyesela/user-management-api:latest
