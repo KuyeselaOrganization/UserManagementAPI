@@ -10,6 +10,7 @@ using UserManagementAPI.Services;
 [ApiController]
 [Route("api/v1/audit-logs")]
 [Authorize(Roles = "Administrator")]
+[ApiExplorerSettings(GroupName = "v1")]
 public class AuditLogController : ControllerBase
 {
     private readonly AuditLogService _auditLogService;

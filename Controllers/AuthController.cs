@@ -1,9 +1,9 @@
 namespace UserManagementAPI.Controllers;
 
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserManagementAPI.DTOs.Auth;
-using UserManagementAPI.DTOs.Common;
 using UserManagementAPI.Services;
 
 [ApiController]
@@ -17,6 +17,7 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
+    [AllowAnonymous]
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto registerDTO)
     {
@@ -24,6 +25,7 @@ public class AuthController : ControllerBase
         return response.Success ? Ok(response) : BadRequest(response);
     }
 
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto loginDTO)
     {
